@@ -41,6 +41,19 @@
 
 /* This is a NOFORK applet. Be very careful! */
 
+# if __ANDROID_API__ < 28
+int getlogin_r(char* name, size_t namesize)
+{
+	char *s = getlogin();
+	if (s) {
+		strncpy (name, s, namesize);
+		return 0;
+	} else {
+		return -1;
+	}
+}
+# endif
+
 int logname_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
 int logname_main(int argc UNUSED_PARAM, char **argv UNUSED_PARAM)
 {

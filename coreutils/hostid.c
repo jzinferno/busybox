@@ -36,7 +36,7 @@ int hostid_main(int argc UNUSED_PARAM, char **argv UNUSED_PARAM)
 	}
 
 	/* POSIX says gethostid returns a "32-bit identifier" */
-	printf("%08x\n", (unsigned)(uint32_t)gethostid());
+	printf("%08x\n", (unsigned)(uint32_t)0);
 
 	return fflush_all();
 }
