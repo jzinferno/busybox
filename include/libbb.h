@@ -1722,6 +1722,7 @@ extern context_t set_security_context_component(security_context_t cur_context,
 extern void setfscreatecon_or_die(security_context_t scontext) FAST_FUNC;
 extern void selinux_preserve_fcontext(int fdesc) FAST_FUNC;
 #else
+int is_selinux_enabled(void);
 #define selinux_preserve_fcontext(fdesc) ((void)0)
 #endif
 extern void selinux_or_die(void) FAST_FUNC;

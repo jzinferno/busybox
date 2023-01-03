@@ -9,7 +9,6 @@
 //config:config SELINUXENABLED
 //config:	bool "selinuxenabled (321 bytes)"
 //config:	default n
-//config:	depends on SELINUX
 //config:	help
 //config:	Enable support for this command to be used within shell scripts
 //config:	to determine if selinux is enabled.
@@ -22,6 +21,18 @@
 //usage:#define selinuxenabled_full_usage ""
 
 #include "libbb.h"
+
+#ifndef CONFIG_SELINUX
+int is_selinux_enabled(void) {
+	struct stat st;
+	stat("/sys/fs/selinux", &st);
+
+	if (S_ISDIR(st.st_mode))
+		return 1;
+
+	return 0;
+}
+#endif
 
 int selinuxenabled_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
 int selinuxenabled_main(int argc UNUSED_PARAM, char **argv UNUSED_PARAM)

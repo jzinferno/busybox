@@ -9,7 +9,6 @@
 //config:config GETENFORCE
 //config:	bool "getenforce (1.7 kb)"
 //config:	default n
-//config:	depends on SELINUX
 //config:	help
 //config:	Enable support to get the current mode of SELinux.
 
@@ -25,6 +24,7 @@
 int getenforce_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
 int getenforce_main(int argc UNUSED_PARAM, char **argv UNUSED_PARAM)
 {
+#ifdef CONFIG_SELINUX
 	int rc;
 
 	rc = is_selinux_enabled();
@@ -45,4 +45,25 @@ int getenforce_main(int argc UNUSED_PARAM, char **argv UNUSED_PARAM)
 	}
 
 	return 0;
+#else
+	if (is_selinux_enabled() == 1) {
+		int selinux_status;
+		FILE *selinux_file = fopen("/sys/fs/selinux/enforce", "r");
+		if (selinux_file == NULL) {
+			selinux_status = 1;
+		} else {
+			selinux_status = fgetc(selinux_file);
+			fclose(selinux_file);
+		}
+		if (selinux_status == 1) {
+			puts("Enforcing");
+		} else {
+			puts("Permissive");
+		}
+	} else {
+		puts("Disabled");
+	}
+
+	return 0;
+#endif
 }
