@@ -7,3 +7,5 @@
 lib-y:=
 
 INSERT
+
+lib-$(CONFIG_UDHCPD) += ether_aton_r.o ether_ntoa_r.o
